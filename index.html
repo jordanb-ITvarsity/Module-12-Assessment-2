@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css.map">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body onload="fetchContacts()">
+    <h1 class="mx-auto text-center">Contacts</h1>
+
+    <div id="table">Contacts Loading...</div>
+    <button id="refresh" class="btn btn-primary d-grid gap-2 col-6 mx-auto mt-md-4 m-3 btn-sm" type="button">Refresh</button>
+    <button id="addContact" class="btn btn-primary d-grid gap-2 col-6 mx-auto mt-md-4 m-3 mb-md-4 btn-sm" type="button">Add Contact</button>
+
+
+    <script src="js/bootstrap.bundle.min.js.map"></script>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="config.js"></script>
+    <script>
+
+
+        document.getElementById("addContact").addEventListener('click', addContact);
+
+        document.getElementById("refresh").addEventListener('click', fetchContacts);
+
+        function fetchContacts(){
+            fetch(rootPath + "controller/get-contacts/")
+            .then(function(response){
+                return response.json();
+            })
+            .then(function(data){
+                displayOutput(data);
+            })
+        }
+
+        function displayOutput(data){
+            output = "<table class='container'>";
+            
+            for (a in data){
+                output += `
+                    <tr  class="row align-items-start" onclick="editContact(${data[a].id})">
+                        <td class="col p-1 "><img src="${rootPath}controller/uploads/${data[a].avatar}" width="40"/></td>
+                        <td class="col bg-light p-1 border m-md-1 mt-md-4 text-center shadow-sm p-3 mb-5 rounded"><h5>${data[a].firstname}</h5></td>
+                        <td class="col bg-light p-1 border m-md-1 mt-md-4 text-center shadow-sm p-3 mb-5 rounded"><h5>${data[a].lastname}</h5></td>
+                    </tr>
+                `
+            }
+            output += "</table>";
+            document.getElementById("table").innerHTML = output;
+        }
+
+        function addContact(){
+            window.open("add-contact.html", "_self");
+        }
+
+        function editContact(id){
+            window.open("edit-contact.html?id=" + id, "_self");
+
+        }
+
+    </script>
+</body>
+</html>
